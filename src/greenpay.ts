@@ -37,24 +37,21 @@ export class GreenPaySDK {
   }
 
   /**
-   *
+   * Tokenize a card with plain card details (not encrypted).
+   * This will request a session to tokenize and then tokenize the plain card details.
    * @param params Tokenization credentials
-   * @param cardDetails Details of the card to tokenize
+   * @param cardDetails Details of the card to tokenize (not encrypted).
    */
   async tokenizeCard(
     params: RequestTokenizeCardModel,
     cardDetails: CreditCardDetailsModel
   ) {
     l('About to request tokenization of card');
-    // Request to tokenize card
-    const security = (await WebHelper.requestTokenizeCard(params))
-      .body as SecurityModel;
-
+    const security = await this.requestSessionToTokenizeCard(params);
     l(`Card tokenized ${JSON.stringify(security)}`);
 
     l(`Encrypting tokenization request`);
-    rsa_.setPublicKey(process.env.PUBLIC_KEY);
-    const body = this.pack(cardDetails, security.session);
+    const body = this._pack(cardDetails, security.session);
 
     l(`Encrypted package ${JSON.stringify(body)}`);
 
@@ -70,103 +67,45 @@ export class GreenPaySDK {
     };
   }
 
+  /**
+   * Request to tokenize a card.
+   * Use this when you need to request a tokenization independently from the tokenization itself 
+   * i.e.: when passing encrypted credit card details
+   * @param params Tokenization credentials
+   */
+  async requestSessionToTokenizeCard(params: RequestTokenizeCardModel) {
+    // Request to tokenize card
+    const security = (await WebHelper.requestTokenizeCard(params))
+      .body as SecurityModel;
+      return security;
+  }
+
+  /**
+   * Tokenize an encrypted card. Call `requestSessionToTokenizeCard` before.
+   * @param params Session data from `requestSessionToTokenizeCard`
+   * @param encryptedCardDetails Details of the card to tokenize (encrypted)
+   */
+  async tokenizeCardEncryptedCreditCardData(
+    securityToken: SecurityModel,
+    encryptedCardDetails: GreenPayEncryptedRequestBodyModel
+  ) {
+    l(`Requesting tokenization...`);
+    const token = (
+      await WebHelper.tokenizeCard(encryptedCardDetails, securityToken.token)
+    ).body as CardTokenizationResponseModel;
+
+    l(`Tokenization successful ${JSON.stringify(token)}`);
+
+    return {
+      securityToken,
+      token
+    };
+  }
+
   async makeTransactionWithCardToken(orderData: OrderRequestDataModel) {
     debugger;
     await WebHelper.makeTransactionWithToken(orderData);
   }
-
-  // async payOrder(cardData: CreditCardDetailsModel, security: SecurityModel) {
-  //   try {
-  //     debugger;
-  //     // Pay order created previously
-  //     const payResponse = await this.postPayOrder(cardData, security);
-
-  //     if (
-  //       (payResponse.body.status || payResponse.status) !== 200 &&
-  //       (payResponse.body.status || payResponse.status) !== 201
-  //     ) {
-  //       throw new Error(JSON.stringify(payResponse.errors || '[]'));
-  //     }
-
-  //     const toVerify = `status:${payResponse.body.status ||
-  //       payResponse.status},orderId:${payResponse.body.orderId}`;
-
-  //     l(`toverify ${toVerify}`);
-  //     // Verify signature returned in payOrder() response.
-  //     const verified = this.verify(payResponse.body._signature, toVerify);
-  //     if (!verified) {
-  //       throw Error('Response was not received from greenpay!');
-  //     }
-  //     return payResponse;
-  //   } catch (err) {
-  //     throw err;
-  //   }
-  // }
-
-  // async createOrder(
-  //   cardData: CreditCardDetailsModel,
-  //   data: OrderRequestDataModel
-  // ): Promise<SecurityModel> {
-  //   try {
-  //     // Create an order in greenpay system.
-  //     // Receive an object {session: "xxx",token:"xxx"}
-  //     let securityTokenResponse = await this.postOrder(data);
-
-  //     debugger;
-  //     if (
-  //       (securityTokenResponse.body.status || securityTokenResponse.status) !==
-  //         200 &&
-  //       (securityTokenResponse.body.status || securityTokenResponse.status) !==
-  //         201
-  //     ) {
-  //       throw new Error(
-  //         `${securityTokenResponse.body.status ||
-  //           securityTokenResponse.status} ${JSON.stringify(
-  //           securityTokenResponse.errors || '[]'
-  //         )}`
-  //       );
-  //     }
-
-  //     const securityToken = securityTokenResponse.body;
-  //     l('security: ', JSON.stringify(securityToken));
-
-  //     // tokenize order before created
-  //     // const tokenizationOrderResponse = await this.tokenizeOrder(
-  //     //   cardData,
-  //     //   securityToken
-  //     // );
-
-  //     // if (
-  //     //   tokenizationOrderResponse.status !== 200 &&
-  //     //   tokenizationOrderResponse.status !== 201
-  //     // ) {
-  //     //   throw new Error(
-  //     //     `${tokenizationOrderResponse.status} ${JSON.stringify(
-  //     //       tokenizationOrderResponse.errors || '[]'
-  //     //     )}`
-  //     //   );
-  //     // }
-
-  //     // l(
-  //     //   'GreenPay tokenize order response: ',
-  //     //   JSON.stringify(tokenizationOrderResponse, null, 2)
-  //     // );
-
-  //     // const toVerify = `status:${tokenizationOrderResponse.body.status},requestId:${tokenizationOrderResponse.body.requestId}`;
-
-  //     // const verified = this.verify(
-  //     //   tokenizationOrderResponse.body._signature,
-  //     //   toVerify
-  //     // ); // Verify signature returned in payOrder() response.
-  //     // if (verified) {
-  //     return securityToken;
-  //     // } else {
-  //     //   throw Error('Response was not received from greenpay!');
-  //     // }
-  //   } catch (err) {
-  //     throw err;
-  //   }
-  // }
 
   /**
    * Creates a AES key pairs.
@@ -193,11 +132,12 @@ export class GreenPaySDK {
    * @param session
    * @param pair_
    */
-  private pack(
+  _pack(
     obj: CreditCardDetailsModel,
     session: string,
     pair?: AESPairModel
-  ) {
+  ): GreenPayEncryptedRequestBodyModel {
+    rsa_.setPublicKey(this.publicKey);
     pair = pair || this.generateAESPairs();
 
     const textBytes = aesjs.utils.utf8.toBytes(JSON.stringify(obj));
@@ -217,27 +157,5 @@ export class GreenPaySDK {
     l('Pack: ', JSON.stringify(returnObj), '\n');
 
     return returnObj;
-  }
-
-  // private async tokenizeOrder(
-  //   cardData: CreditCardDetailsModel,
-  //   security: SecurityModel
-  // ): Promise<GreenPayResponseModel> {
-  //   rsa_.setPublicKey(this.publicKey);
-  //   const body = this.pack(cardData, security.session);
-  //   const resp = await this.postTokenize(body, security.token);
-  //   return resp;
-  // }
-
-  private verify(signed: string, toVerify: string) {
-    const sig = new jsrsasign.crypto.Signature({
-      alg: 'SHA256withRSA'
-    });
-    // You should verify with your public key in the PEM format
-    sig.init(
-      `-----BEGIN PUBLIC KEY-----${this.publicKey}-----END PUBLIC KEY-----`
-    );
-    sig.updateString(toVerify);
-    return sig.verify(signed);
   }
 }

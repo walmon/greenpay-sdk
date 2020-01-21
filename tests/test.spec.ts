@@ -103,31 +103,23 @@ describe('GreenPay Gateway', () => {
       }
     });
 
-    // it('should create a payment order', async () => {
-    //   await sdk
-    //     .createOrder(requestData)
-    //     .then(result => {
-    //       console.log(result);
-    //       expect(result).to.exist;
-    //       securityToken = result;
-    //     })
-    //     .catch(e => {
-    //       console.log(e);
-    //       fail(JSON.stringify(e));
-    //     });
+    it('should make a payment with details of a credit card encrypted from frontend', async () => {
+      try {
+        securityToken = await sdk.requestSessionToTokenizeCard(requestTokenization);
 
-    //   //   expect(request).to.eventually.eq('');
-    // });
+        // Manually handle encrypting the info
+        const body = sdk._pack(creditCardData, securityToken.session);
 
-    // it('should fulfill an order', async () => {
-    //   await sdk
-    //     .payOrder(creditCardData, securityToken)
-    //     .then(result => {
-    //       expect(result).to.exist;
-    //     })
-    //     .catch(e => {
-    //       fail(JSON.stringify(e));
-    //     });
-    // });
+        const tokenizationResponse = await sdk.tokenizeCardEncryptedCreditCardData(securityToken, body);
+
+        cardToken = tokenizationResponse.token;
+
+        // Add the token to make payment
+        requestData.authenticateTransaction(cardToken.result.token);
+        await sdk.makeTransactionWithCardToken(requestData);
+      } catch (ex) {
+        fail(JSON.stringify(ex));
+      }
+    });
   });
 });
