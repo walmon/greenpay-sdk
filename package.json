@@ -1,9 +1,13 @@
 {
   "name": "greenpay-sdk",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "SDK created by WorldSibu",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/walmon/greenpay-sdk"
+  },
   "scripts": {
     "prepublish": "tsc",
     "build": "tsc",

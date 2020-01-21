@@ -32,8 +32,7 @@ El flujo es: uno solicita un token de sesión a Greenpay, usa ese token de sesi�
 
 Este flujo es un poco más complejo porque el front end se ve involucrado. Por PCI este es el flujo preferencial.
 
-![greenpay PCI flujo](/img/greenpay1.png)
-
+![greenpay PCI flujo](https://raw.githubusercontent.com/walmon/greenpay-sdk/master/img/greenpay1.png)
 
 ### Flujos futuros
 
