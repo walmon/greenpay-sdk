@@ -1,6 +1,6 @@
 {
   "name": "greenpay-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "SDK created by WorldSibu",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
