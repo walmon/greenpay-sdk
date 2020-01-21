@@ -9,7 +9,8 @@
   },
   "scripts": {
     "prepublish": "tsc",
-    "build": "tsc"
+    "build": "tsc",
+    "link": "npm link"
   },
   "author": "Walter Montes",
   "license": "Apache-2.0",

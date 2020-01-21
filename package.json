@@ -12,7 +12,8 @@
     "prepublish": "tsc",
     "build": "tsc",
     "test": "npm run build && mocha -r ts-node/register -r jsdom-global/register tests/*.spec.ts --reporter spec --timeout 100000",
-    "test:debug": "npm run build && mocha --inspect -r ts-node/register -r jsdom-global/register tests/*.spec.ts --reporter spec --timeout 100000"
+    "test:debug": "npm run build && mocha --inspect -r ts-node/register -r jsdom-global/register tests/*.spec.ts --reporter spec --timeout 100000",
+    "link": "lerna run link"
   },
   "keywords": [
     "Greenpay",
