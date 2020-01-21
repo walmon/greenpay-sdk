@@ -80,36 +80,35 @@ describe('GreenPay Gateway', () => {
       sdk = new GreenPaySDK();
     });
 
-    // it('should tokenize the card', async () => {
-    //   try {
-    //     const response = await sdk.tokenizeCard(
-    //       requestTokenization,
-    //       creditCardData
-    //     );
+    it('should tokenize the card', async () => {
+      try {
+        const response = await sdk.tokenizeCard(
+          requestTokenization,
+          creditCardData
+        );
 
-    //     expect(response).to.exist;
-    //     expect(response.token).to.exist;
-    //     expect(response.token.result.token).to.exist;
+        expect(response).to.exist;
+        expect(response.token).to.exist;
+        expect(response.token.result.token).to.exist;
 
-    //     cardToken = response.token;
-    //   } catch (ex) {
-    //     fail(JSON.stringify(ex));
-    //   }
-    // });
+        cardToken = response.token;
+      } catch (ex) {
+        fail(JSON.stringify(ex));
+      }
+    });
 
-    // it('should make a transaction with token', async () => {
-    //   requestData.authenticateTransaction(cardToken.result.token);
+    it('should make a transaction with token', async () => {
+      requestData.authenticateTransaction(cardToken.result.token);
 
-    //   try {
-    //     await sdk.makeTransactionWithCardToken(requestData);
-    //   } catch (ex) {
-    //     fail(JSON.stringify(ex));
-    //   }
-    // });
+      try {
+        await sdk.makeTransactionWithCardToken(requestData);
+      } catch (ex) {
+        fail(JSON.stringify(ex));
+      }
+    });
 
     it('should make a payment with details of a credit card encrypted from frontend', async () => {
       try {
-        debugger;
         securityToken = await sdk.requestSessionToTokenizeCard(requestTokenization);
 
         // Manually handle encrypting the info
