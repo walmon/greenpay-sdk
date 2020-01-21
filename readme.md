@@ -2,6 +2,12 @@
 
 Librería cliente para consumir el API de GreenPay desde NodeJS con Typescript.
 
+## Usar
+
+```bash
+npm i greenpay-sdk --save
+```
+
 ## Test
 
 Para probar llene los datos del .env según lo que le dio Greenpay y corra
