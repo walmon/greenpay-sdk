@@ -13,8 +13,11 @@ import {
   CreditCardModel,
   SecurityModel,
   OrderRequestDataModel,
-  FrontendSDK
 } from '../src';
+import { 
+  FrontendSDK
+} from '../src/frontend';
+
 import { fail } from 'assert';
 import { CurrencyEnum } from '../src/models/currency.enum';
 import { RequestTokenizeCardModel } from '../src/models/request-tokenize-card.model';
