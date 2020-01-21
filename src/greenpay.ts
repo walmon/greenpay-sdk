@@ -103,7 +103,6 @@ export class GreenPaySDK {
   }
 
   async makeTransactionWithCardToken(orderData: OrderRequestDataModel) {
-    debugger;
     await WebHelper.makeTransactionWithToken(orderData);
   }
 
