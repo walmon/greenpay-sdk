@@ -1,8 +1,10 @@
 import * as dotenv from 'dotenv';
-import { GreenPayEncryptedRequestBodyModel } from '../models/greenpay-body.model';
-import { GreenPayResponseModel } from '..';
-import { RequestTokenizeCardModel } from '../models/request-tokenize-card.model';
-import { OrderRequestDataModel } from '../models/order-request-data.model';
+import {
+  GreenPayEncryptedRequestBodyModel,
+  GreenPayResponseModel,
+  RequestTokenizeCardModel,
+  OrderRequestDataModel
+} from '@walmon/greenpay-sdk-core';
 dotenv.config();
 const unirest = require('unirest');
 
@@ -69,8 +71,6 @@ export namespace WebHelper {
         });
     });
   }
-
-
 
   function resolveGreenPayRequest(
     response: GreenPayResponseModel,

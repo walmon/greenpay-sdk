@@ -5,14 +5,16 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 import * as aesjs from 'aes-js';
-import * as jsrsasign from 'jsrsasign';
-import { OrderRequestDataModel } from './models/order-request-data.model';
-import { CreditCardDetailsModel } from './models/credit-card-details.model';
-import { GreenPayResponseModel, SecurityModel, AESPairModel } from '.';
-import { GreenPayEncryptedRequestBodyModel } from './models/greenpay-body.model';
-import { WebHelper } from './utils/web-helper';
-import { RequestTokenizeCardModel } from './models/request-tokenize-card.model';
-import { CardTokenizationResponseModel } from './models/card-tokenization-response.model';
+import { WebHelper } from './web-helper';
+import {
+  RequestTokenizeCardModel,
+  CreditCardDetailsModel,
+  CardTokenizationResponseModel,
+  SecurityModel,
+  GreenPayEncryptedRequestBodyModel,
+  OrderRequestDataModel,
+  AESPairModel
+} from '@walmon/greenpay-sdk-core';
 const rsa = require('node-jsencrypt');
 const rsa_ = new rsa();
 
@@ -69,7 +71,7 @@ export class GreenPaySDK {
 
   /**
    * Request to tokenize a card.
-   * Use this when you need to request a tokenization independently from the tokenization itself 
+   * Use this when you need to request a tokenization independently from the tokenization itself
    * i.e.: when passing encrypted credit card details
    * @param params Tokenization credentials
    */
@@ -77,7 +79,7 @@ export class GreenPaySDK {
     // Request to tokenize card
     const security = (await WebHelper.requestTokenizeCard(params))
       .body as SecurityModel;
-      return security;
+    return security;
   }
 
   /**
@@ -131,7 +133,7 @@ export class GreenPaySDK {
    * @param session
    * @param pair_
    */
-  _pack(
+  private _pack(
     obj: CreditCardDetailsModel,
     session: string,
     pair?: AESPairModel

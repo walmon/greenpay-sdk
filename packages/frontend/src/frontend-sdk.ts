@@ -1,6 +1,6 @@
 import * as JsEncryptModule from 'jsencrypt';
-import * as aesjs from './libs/aes-js';
-import { SecurityModel, CreditCardDetailsModel } from '../models';
+import * as aesjs from 'aes-js';
+import { SecurityModel, CreditCardDetailsModel } from '@walmon/greenpay-sdk-core';
 
 /**
  * Front end library to encrypt credit card details.

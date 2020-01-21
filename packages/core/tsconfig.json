@@ -10,6 +10,6 @@
     "declaration": true
   },
   "compileOnSave": true,
-  "include": ["packages"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

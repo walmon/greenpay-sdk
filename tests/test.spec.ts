@@ -7,21 +7,19 @@ import { expect, use } from 'chai';
 import 'mocha';
 import * as chaiAsPromised from 'chai-as-promised';
 
+import { GreenPaySDK } from '../packages/backend';
+import { FrontendSDK } from '../packages/frontend';
+
+import { fail } from 'assert';
 import {
-  GreenPaySDK,
+  CurrencyEnum,
+  RequestTokenizeCardModel,
+  CardTokenizationResponseModel,
   CreditCardDetailsModel,
   CreditCardModel,
   SecurityModel,
-  OrderRequestDataModel,
-} from '../src';
-import { 
-  FrontendSDK
-} from '../src/frontend';
-
-import { fail } from 'assert';
-import { CurrencyEnum } from '../src/models/currency.enum';
-import { RequestTokenizeCardModel } from '../src/models/request-tokenize-card.model';
-import { CardTokenizationResponseModel } from '../src/models/card-tokenization-response.model';
+  OrderRequestDataModel
+} from '../packages/core';
 
 use(chaiAsPromised);
 
@@ -112,14 +110,23 @@ describe('GreenPay Gateway', () => {
 
     it('should make a payment with details of a credit card encrypted from frontend', async () => {
       try {
-        securityToken = await sdk.requestSessionToTokenizeCard(requestTokenization);
+        securityToken = await sdk.requestSessionToTokenizeCard(
+          requestTokenization
+        );
 
         // Manually handle encrypting the info
-        const frontEndSDK = new FrontendSDK(publicKey, securityToken, creditCardData);
+        const frontEndSDK = new FrontendSDK(
+          publicKey,
+          securityToken,
+          creditCardData
+        );
 
         const body = frontEndSDK.encrypt();
 
-        const tokenizationResponse = await sdk.tokenizeCardEncryptedCreditCardData(securityToken, body);
+        const tokenizationResponse = await sdk.tokenizeCardEncryptedCreditCardData(
+          securityToken,
+          body
+        );
 
         cardToken = tokenizationResponse.token;
 

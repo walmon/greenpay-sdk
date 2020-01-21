@@ -1,27 +1,31 @@
 {
-  "name": "@walmon/greenpay-sdk",
+  "name": "@walmon/greenpay-sdk-backend",
   "version": "0.0.1",
-  "description": "SDK created by WorldSibu",
+  "description": "Backend components",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/walmon/greenpay-sdk"
   },
   "scripts": {
     "prepublish": "tsc",
-    "build": "tsc",
-    "test": "npm run build && mocha -r ts-node/register -r jsdom-global/register tests/*.spec.ts --reporter spec --timeout 100000",
-    "test:debug": "npm run build && mocha --inspect -r ts-node/register -r jsdom-global/register tests/*.spec.ts --reporter spec --timeout 100000"
+    "build": "tsc"
   },
+  "author": "Walter Montes",
+  "license": "Apache-2.0",
   "keywords": [
     "Greenpay",
     "WorldSibu",
     "payments"
   ],
-  "author": "Walter Montes",
-  "license": "Apache-2.0",
   "dependencies": {
+    "@walmon/greenpay-sdk-core": "^0.0.1",
+    "aes-js": "^3.1.2",
+    "dotenv": "^8.2.0",
+    "jsencrypt": "^3.0.0-rc.1",
+    "jsrsasign": "^8.0.12",
+    "node-jsencrypt": "^1.0.0",
+    "unirest": "^0.6.0"
   },
   "devDependencies": {
     "@types/aes-js": "^3.1.0",
@@ -34,7 +38,6 @@
     "chai-as-promised": "^7.1.1",
     "jsdom": "^16.0.1",
     "jsdom-global": "^3.0.2",
-    "lerna": "^3.20.2",
     "mocha": "5.0.3",
     "ts-loader": "^6.2.1",
     "ts-node": "8.0.2",
