@@ -2,10 +2,25 @@
 
 Librería cliente para consumir el API de GreenPay desde NodeJS con Typescript.
 
+Este proyecto se compone de 3 librerías:
+
+* Core `@walmon/greenpay-sdk-core`: componentes compartidos como modelos.
+* Backend `@walmon/greenpay-sdk-backend`: componentes con dependencias criptográficas de servidor.
+* Frontend `@walmon/greenpay-sdk-frontend`: librería para utilizar en front end JS (angular, react, vue, etc).
+
 ## Usar
 
+Para consumir en NodeJS:
+
 ```bash
-npm i greenpay-sdk --save
+npm i @walmon/greenpay-sdk-backend --save
+npm i @walmon/greenpay-sdk-core --save
+```
+
+Para consumir en un front end:
+
+```bash
+npm i @walmon/greenpay-sdk-frontend --save
 ```
 
 ## Test
