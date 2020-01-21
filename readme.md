@@ -14,6 +14,7 @@ Para probar llene los datos del .env según lo que le dio Greenpay y corra
 
 ```bash
 npm i
+npm test
 ```
 
 ## Includes
