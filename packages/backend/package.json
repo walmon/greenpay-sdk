@@ -1,6 +1,6 @@
 {
   "name": "@walmon/greenpay-sdk-backend",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Backend components",
   "main": "dist/index.js",
   "repository": {

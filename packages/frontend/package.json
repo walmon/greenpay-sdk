@@ -1,6 +1,6 @@
 {
   "name": "@walmon/greenpay-sdk-frontend",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Frontend components",
   "main": "dist/index.js",
   "repository": {
@@ -20,7 +20,9 @@
     "payments"
   ],
   "dependencies": {
-    "@walmon/greenpay-sdk-core": "^0.0.1"
+    "@walmon/greenpay-sdk-core": "^0.0.1",
+    "aes-js": "^3.1.2",
+    "jsencrypt": "^3.0.0-rc.1"
   },
   "devDependencies": {
     "ts-node": "8.0.2",

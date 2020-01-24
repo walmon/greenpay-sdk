@@ -1,6 +1,6 @@
 {
   "name": "@walmon/greenpay-sdk-core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Core components like models",
   "main": "dist/index.js",
   "repository": {
