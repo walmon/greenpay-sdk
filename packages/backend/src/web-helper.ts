@@ -8,41 +8,53 @@ import {
 dotenv.config();
 const unirest = require('unirest');
 
-export namespace WebHelper {
-  export const checkoutEndpoint = process.env.CHECKOUT_ENDPOINT;
-  export const merchantEndpoint = process.env.MERCHANT_ENDPOINT;
+export class WebHelper {
+  checkoutEndpoint;
+  merchantEndpoint;
+  tokenizeCardEndpoint;
 
-  export const tokenizeCardEndpoint = `${merchantEndpoint}/tokenize`;
+  /**
+   * Compile from external environment variables
+   * @param checkoutEndpoint i.e.: https://sandbox-checkout.greenpay.me
+   * @param merchantEndpoint i.e.: https://sandbox-merchant.greenpay.me
+   */
+  constructor(checkoutEndpoint?: string, merchantEndpoint?: string) {
+    this.checkoutEndpoint = checkoutEndpoint || process.env.CHECKOUT_ENDPOINT;
+    this.merchantEndpoint = merchantEndpoint || process.env.MERCHANT_ENDPOINT;
+    this.tokenizeCardEndpoint = `${this.merchantEndpoint}/tokenize`;
+  }
 
   /**
    * Request a session to tokenize card in the Greenpay gateway.
    * @param data
    * @param accessToken
    */
-  export function requestTokenizeCard(
+  requestTokenizeCard(
     data: RequestTokenizeCardModel
   ): Promise<GreenPayResponseModel> {
+    const that = this;
     return new Promise(function(resolve, reject) {
       unirest
-        .post(tokenizeCardEndpoint)
+        .post(that.tokenizeCardEndpoint)
         .headers({
           Accept: 'application/json',
           'Content-Type': 'application/json'
         })
         .send(data)
         .end((response: GreenPayResponseModel) => {
-          resolveGreenPayRequest(response, resolve, reject);
+          that.resolveGreenPayRequest(response, resolve, reject);
         });
     });
   }
 
-  export function tokenizeCard(
+  tokenizeCard(
     data: GreenPayEncryptedRequestBodyModel,
     accessToken: string
   ): Promise<GreenPayResponseModel> {
+    const that = this;
     return new Promise(function(resolve, reject) {
       unirest
-        .post(`${checkoutEndpoint}/tokenize`)
+        .post(`${that.checkoutEndpoint}/tokenize`)
         .headers({
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -50,29 +62,30 @@ export namespace WebHelper {
         })
         .send(data)
         .end((response: GreenPayResponseModel) => {
-          resolveGreenPayRequest(response, resolve, reject);
+          that.resolveGreenPayRequest(response, resolve, reject);
         });
     });
   }
 
-  export function makeTransactionWithToken(
+  makeTransactionWithToken(
     data: OrderRequestDataModel
   ): Promise<GreenPayResponseModel> {
+    const that = this;
     return new Promise(function(resolve, reject) {
       unirest
-        .post(`${merchantEndpoint}/tokenPayment`)
+        .post(`${that.merchantEndpoint}/tokenPayment`)
         .headers({
           Accept: 'application/json',
           'Content-Type': 'application/json'
         })
         .send(data)
         .end((response: GreenPayResponseModel) => {
-          resolveGreenPayRequest(response, resolve, reject);
+          that.resolveGreenPayRequest(response, resolve, reject);
         });
     });
   }
 
-  function resolveGreenPayRequest(
+  private resolveGreenPayRequest(
     response: GreenPayResponseModel,
     resolve,
     reject

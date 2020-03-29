@@ -20,7 +20,7 @@
     "payments"
   ],
   "dependencies": {
-    "@walmon/greenpay-sdk-core": "^0.0.1",
+    "@walmon/greenpay-sdk-core": "^0.0.2",
     "aes-js": "^3.1.2",
     "jsencrypt": "^3.0.0-rc.1"
   },

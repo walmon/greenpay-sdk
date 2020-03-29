@@ -26,15 +26,32 @@ const l = (message?: any, ...optionalParams: any[]) => {
 
 export class GreenPaySDK {
   private publicKey: string;
+  private webHelper: WebHelper;
 
-  constructor() {
-    this.publicKey = process.env.PUBLIC_KEY;
+  constructor(params?: {
+    publicKey?: string;
+    checkoutEndpoint?: string;
+    merchantEndpoint?: string;
+  }) {
+    this.publicKey =
+      params && params.publicKey ? params.publicKey : process.env.PUBLIC_KEY;
+    if (params) {
+      this.webHelper = new WebHelper(
+        params.checkoutEndpoint,
+        params.merchantEndpoint
+      );
+    } else {
+      this.webHelper = new WebHelper();
+    }
+
     if (
-      !WebHelper.tokenizeCardEndpoint ||
-      !WebHelper.checkoutEndpoint ||
+      !this.webHelper.tokenizeCardEndpoint ||
+      !this.webHelper.checkoutEndpoint ||
       !this.publicKey
     ) {
-      throw new Error('Check your env file. Required parameters missing.');
+      throw new Error(
+        'Check your env file. Required parameters `checkoutEndpoint` and `merchantEndpoint` are missing.'
+      );
     }
   }
 
@@ -58,7 +75,7 @@ export class GreenPaySDK {
     l(`Encrypted package ${JSON.stringify(body)}`);
 
     l(`Requesting tokenization...`);
-    const token = (await WebHelper.tokenizeCard(body, security.token))
+    const token = (await this.webHelper.tokenizeCard(body, security.token))
       .body as CardTokenizationResponseModel;
 
     l(`Tokenization successful ${JSON.stringify(token)}`);
@@ -77,7 +94,7 @@ export class GreenPaySDK {
    */
   async requestSessionToTokenizeCard(params: RequestTokenizeCardModel) {
     // Request to tokenize card
-    const security = (await WebHelper.requestTokenizeCard(params))
+    const security = (await this.webHelper.requestTokenizeCard(params))
       .body as SecurityModel;
     return security;
   }
@@ -93,7 +110,7 @@ export class GreenPaySDK {
   ) {
     l(`Requesting tokenization...`);
     const token = (
-      await WebHelper.tokenizeCard(encryptedCardDetails, securityToken.token)
+      await this.webHelper.tokenizeCard(encryptedCardDetails, securityToken.token)
     ).body as CardTokenizationResponseModel;
 
     l(`Tokenization successful ${JSON.stringify(token)}`);
@@ -105,7 +122,7 @@ export class GreenPaySDK {
   }
 
   async makeTransactionWithCardToken(orderData: OrderRequestDataModel) {
-    await WebHelper.makeTransactionWithToken(orderData);
+    await this.webHelper.makeTransactionWithToken(orderData);
   }
 
   /**

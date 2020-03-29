@@ -83,6 +83,7 @@ describe('GreenPay Gateway', () => {
 
     it('should tokenize the card', async () => {
       try {
+        debugger;
         const response = await sdk.tokenizeCard(
           requestTokenization,
           creditCardData
@@ -94,6 +95,7 @@ describe('GreenPay Gateway', () => {
 
         cardToken = response.token;
       } catch (ex) {
+        console.log(ex);
         fail(JSON.stringify(ex));
       }
     });

@@ -28,7 +28,9 @@ npm i @walmon/greenpay-sdk-frontend --save
 Para probar llene los datos del .env según lo que le dio Greenpay y corra
 
 ```bash
-npm i
+npm i -g lerna
+lerna bootstrap
+npm run build
 npm test
 ```
 
