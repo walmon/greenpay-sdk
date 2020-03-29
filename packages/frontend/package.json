@@ -1,6 +1,6 @@
 {
   "name": "@walmon/greenpay-sdk-frontend",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Frontend components",
   "main": "dist/index.js",
   "repository": {
@@ -10,7 +10,8 @@
   "scripts": {
     "prepublish": "tsc",
     "build": "tsc",
-    "link": "npm link"
+    "link": "npm link",
+    "publish": "npm publish"
   },
   "author": "Walter Montes",
   "license": "Apache-2.0",

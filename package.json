@@ -1,6 +1,6 @@
 {
   "name": "@walmon/greenpay-sdk",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "SDK created by WorldSibu",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
